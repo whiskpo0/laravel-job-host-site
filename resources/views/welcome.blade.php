@@ -1,99 +1,68 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <title>Laravel</title>
+@section('content')
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <search-component></search-component>
+        </div>
+        <br>
+        <br>
+        <h1>Recent Jobs</h1>
+        <table class="table">
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+            <tbody>
+                @foreach($jobs as $job)
+                <tr>
+                    <td>
+                        {{-- <img src="{{ asset('avatar/man.jpg')}}" width="80" alt=""> --}}
+                        <img src="{{ asset('uploads/logo')}}/{{$job->company->logo}}" width="80" alt="">
+                    </td>
+                    <td>position: {{ $job->position }}
+                        <br>
+                        <i class="far fa-clock" aria-hidden="true"></i>
+                        {{$job->type}}
+                    </td>
+                    <td><i class="fa fa-map-marker-alt" aria-hidden="true"></i> Address: {{ $job->address }}</td>
+                    <td><i class="fas fa-globe-americas"></i> Date: {{$job->created_at->diffForHumans()}}</td>
+                    <td>
+                        <a href="{{ route('jobs.show',[$job->id, $job->slug]) }}">
+                            <button class="btn btn-success btn-sm">Apply</button>
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <a href="{{ route('alljobs') }}">
+            <button class="btn btn-success btn-lg" style="width: 100%">Browse all jobs</button>
+        </a>
+    </div>
+    <br><br>
+    <h1>Featured Companies</h1>
+</div>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+    <div class="container">
+        <div class="row">
+            @foreach ($companies as $company)  
+            <div class="col-md-3">
+                <div class="card" style="width: 18rem;">                    
+                    <img src="{{ asset('uploads/logo')}}/{{$company->logo}}" width="80" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">{{$company->cname}}</h5>
+                        <p class="card-text">{{ str_limit($company->description, 20)}}.</p>
+                        <a href="{{ route('company.index', [$company->id, $company->slug])}}" class="btn btn-primary">Go somewhere</a>
+                    </div>
                 </div>
             </div>
+            @endforeach
         </div>
-    </body>
-</html>
+    </div>
+@endsection
+<style>
+    .fa, .far, .fas{ 
+        color:#4183D7;
+    }
+</style>

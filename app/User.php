@@ -5,8 +5,10 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Profile; 
+use App\Company; 
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
@@ -16,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','user_type'
     ];
 
     /**
@@ -36,4 +38,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function profile()
+    { 
+        return $this->hasOne(Profile::class); 
+    }
+
+    public function company()
+    { 
+        return $this->hasOne(Company::class); 
+    }
+
+    public function favorites()
+    { 
+        return $this->belongsToMany(Job::class, 'favorites', 'user_id', 'job_id')->withTimeStamps(); 
+    }
+
 }
